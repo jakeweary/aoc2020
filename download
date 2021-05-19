@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+[[ $# -eq 2 ]] || {
+  echo "Usage: $0 <out-dir> <session-cookie>"
+  exit
+}
+
+o="$1"
+c="cookie: session=$2"
+
+mkdir -p "$o" && for i in {1..25}; do
+  f=$(printf "%s/day%02d" "$o" "$i")
+  u="https://adventofcode.com/2020/day/$i/input"
+  [[ -f $f ]] || curl --compressed -#H "$c" "$u" > "$f"
+done

@@ -1,5 +1,5 @@
 // I used this to convert puzzle descriptions to markdown
-// the code supposed to be pasted into the browser console
+// the code is supposed to be pasted into the browser console
 
 const mdUl = (n, ul) => {
   const md = mdNodes(n.children, ul + 1).trimEnd()

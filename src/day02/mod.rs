@@ -18,16 +18,20 @@ pub fn run(input: File) -> (usize, usize) {
   let lines = input.lines().map(Result::unwrap).collect::<Vec<_>>();
   let parsed = lines.iter().map(|line| parse(line)).collect::<Vec<_>>();
 
-  let part1 = parsed.iter().filter(|&&(lo, hi, chr, pwd)| {
-    let count = pwd.chars().filter(|&c| c == chr).count();
-    (lo..=hi).contains(&count)
-  }).count();
+  let part1 = parsed.iter()
+    .filter(|&&(lo, hi, chr, pwd)| {
+      let count = pwd.chars().filter(|&c| c == chr).count();
+      (lo..=hi).contains(&count)
+    })
+    .count();
 
-  let part2 = parsed.iter().filter_map(|&(c1, c2, chr, pwd)| {
-    let c1 = pwd.chars().nth(c1 - 1)?;
-    let c2 = pwd.chars().nth(c2 - 1)?;
-    ((c1 == chr) ^ (c2 == chr)).then(|| ())
-  }).count();
+  let part2 = parsed.iter()
+    .filter_map(|&(a, b, chr, pwd)| {
+      let a = chr == pwd.chars().nth(a - 1)?;
+      let b = chr == pwd.chars().nth(b - 1)?;
+      (a ^ b).then(|| ())
+    })
+    .count();
 
   (part1, part2)
 }

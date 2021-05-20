@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-[[ $# -eq 2 ]] || {
-  echo "Usage: $0 <out-dir> <session-cookie>"
-  exit
-}
+(($# < 2)) && echo "Usage: $0 <out-dir> <session-cookie>" && exit 1
 
-o="$1"
-c="cookie: session=$2"
-
-mkdir -p "$o" && for i in {1..25}; do
-  f=$(printf "%s/day%02d" "$o" "$i")
+mkdir -p "$1" && for i in {1..25}; do
+  f=$(printf "%s/day%02d" "$1" "$i")
   u="https://adventofcode.com/2020/day/$i/input"
-  [[ -f $f ]] || curl --compressed -#H "$c" "$u" > "$f"
+  [[ -f $f ]] || curl --compressed -#b "session=$2" "$u" > "$f"
 done

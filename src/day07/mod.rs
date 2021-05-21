@@ -25,14 +25,12 @@ fn part1(parsed: &mut Parsed, bag: &str) -> usize {
   let mut stack = vec![bag];
   while let Some(bag) = stack.pop() {
     parsed.retain(|&k, v| {
-      match v.iter().all(|&(k, _)| k != bag) {
-        true => true,
-        false => {
-          stack.push(k);
-          count += 1;
-          false
-        }
+      let found = v.iter().any(|&(k, _)| k == bag);
+      if found {
+        stack.push(k);
+        count += 1;
       }
+      !found
     });
   }
   count

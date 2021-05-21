@@ -20,14 +20,14 @@ fn parse(input: &str) -> Option<Parsed> {
   Some(map)
 }
 
-fn part1(parsed: &Parsed) -> usize {
-  let mut visited = HashMap::new();
-  let mut stack = vec!["shiny gold"];
+fn part1(parsed: &Parsed, bag: &str) -> usize {
   let mut count = 0;
+  let mut counted = HashMap::new();
+  let mut stack = vec![bag];
   while let Some(bag) = stack.pop() {
     for (&k, v) in parsed {
       if v.iter().any(|&(_, v)| v == bag) {
-        visited.entry(k).or_insert_with(|| {
+        counted.entry(k).or_insert_with(|| {
           stack.push(k);
           count += 1;
         });
@@ -37,9 +37,9 @@ fn part1(parsed: &Parsed) -> usize {
   count
 }
 
-fn part2(parsed: &Parsed) -> usize {
-  let mut stack = vec![(1, "shiny gold")];
+fn part2(parsed: &Parsed, bag: &str) -> usize {
   let mut count = 0;
+  let mut stack = vec![(1, bag)];
   while let Some((qty1, bag)) = stack.pop() {
     for &(qty2, bag) in &parsed[bag] {
       stack.push((qty1 * qty2, bag));
@@ -54,8 +54,8 @@ pub fn run(mut file: File) -> (usize, usize) {
   file.read_to_string(&mut input).unwrap();
 
   let parsed = parse(&input).unwrap();
-  let part1 = part1(&parsed);
-  let part2 = part2(&parsed);
+  let part1 = part1(&parsed, "shiny gold");
+  let part2 = part2(&parsed, "shiny gold");
 
   (part1, part2)
 }

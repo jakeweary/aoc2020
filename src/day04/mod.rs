@@ -1,6 +1,6 @@
 use std::fs::File;
 
-use passport::PartialPassport;
+use passport::Passport;
 
 use crate::utils::line_groups;
 
@@ -11,7 +11,7 @@ pub fn run(input: File) -> (usize, usize) {
   let mut part2 = 0;
 
   for group in line_groups(input) {
-    let passport = PartialPassport::parse(group.as_ref());
+    let passport = Passport::parse(group.as_ref());
     if let Some(passport) = passport.complete() {
       part1 += 1;
       if passport.is_valid() {

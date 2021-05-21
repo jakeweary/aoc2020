@@ -1,14 +1,10 @@
 macro_rules! impl_with_fields(($($f:ident)+) => {
   #[derive(Default)]
-  pub struct PartialPassport<'a> {
-    $($f: Option<&'a str>),+
+  pub struct Passport<T> {
+    $($f: T),+
   }
 
-  pub struct Passport<'a> {
-    $($f: &'a str),+
-  }
-
-  impl<'a> PartialPassport<'a> {
+  impl<'a> Passport<Option<&'a str>> {
     pub fn parse(key_value_pairs: &'a str) -> Self {
       key_value_pairs
         .split_ascii_whitespace()
@@ -19,7 +15,7 @@ macro_rules! impl_with_fields(($($f:ident)+) => {
         })
     }
 
-    pub fn complete(&self) -> Option<Passport<'a>> {
+    pub fn complete(&self) -> Option<Passport<&'a str>> {
       match self {
         Self { $($f: Some($f)),+ } => Some(Passport { $($f),+ }),
         _ => None
@@ -30,7 +26,7 @@ macro_rules! impl_with_fields(($($f:ident)+) => {
 
 impl_with_fields!(byr iyr eyr hgt hcl ecl pid);
 
-impl<'a> Passport<'a> {
+impl<'a> Passport<&'a str> {
   pub fn is_valid(&self) -> bool {
     let inner = move || {
       let byr = self.byr.parse().ok()?;

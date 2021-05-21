@@ -28,18 +28,17 @@ impl_with_fields!(byr iyr eyr hgt hcl ecl pid);
 
 impl<'a> Passport<&'a str> {
   pub fn is_valid(&self) -> bool {
+    let Self { byr, iyr, eyr, hgt, hcl, ecl, pid } = *self;
     let inner = move || {
-      let byr = self.byr.parse().ok()?;
-      let iyr = self.iyr.parse().ok()?;
-      let eyr = self.eyr.parse().ok()?;
+      let byr = byr.parse().ok()?;
+      let iyr = iyr.parse().ok()?;
+      let eyr = eyr.parse().ok()?;
       let hgt = {
-        let mid = self.hgt.find(|c| !matches!(c, '0'..='9'))?;
-        let (hgt, units) = self.hgt.split_at(mid);
+        let mid = hgt.find(|c| !matches!(c, '0'..='9'))?;
+        let (hgt, units) = hgt.split_at(mid);
         (hgt.parse().ok()?, units)
       };
-      let hcl = self.hcl.strip_prefix('#')?;
-      let ecl = self.ecl;
-      let pid = self.pid;
+      let hcl = hcl.strip_prefix('#')?;
       Some({
         matches!((byr, iyr, eyr), (1920..=2002, 2010..=2020, 2020..=2030)) &&
         matches!(hgt, (150..=193, "cm") | (59..=76, "in")) &&

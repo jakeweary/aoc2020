@@ -7,15 +7,14 @@ type Parsed<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;
 fn parse(input: &str) -> Option<Parsed> {
   let mut map = HashMap::new();
   for line in input.lines() {
-    let mut contains = Vec::new();
     let mut hi = line.match_indices(" bag");
     let lo = line.match_indices(|c| matches!(c, '0'..='9'));
     let bag = &line[..hi.next()?.0];
-    for (lo, hi) in lo.zip(hi) {
+    let contains = lo.zip(hi).map(|(lo, hi)| {
       let (qty, bag) = line[lo.0..hi.0].split_once(' ')?;
-      contains.push((bag, qty.parse().ok()?));
-    }
-    map.insert(bag, contains);
+      Some((bag, qty.parse().ok()?))
+    });
+    map.insert(bag, contains.collect::<Option<_>>()?);
   }
   Some(map)
 }

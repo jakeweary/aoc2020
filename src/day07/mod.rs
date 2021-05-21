@@ -5,7 +5,7 @@ use std::io::Read;
 type Parsed<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;
 
 fn parse(input: &str) -> Option<Parsed> {
-  input.lines().into_iter().map(|line| {
+  input.lines().map(|line| {
     let mut hi = line.match_indices(" bag");
     let lo = line.match_indices(|c| matches!(c, '0'..='9'));
     let bag = &line[..hi.next()?.0];

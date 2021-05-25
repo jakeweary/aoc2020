@@ -10,17 +10,25 @@ macro_rules! advent_of_code(($($id:ident -> $sol:pat)+) => {
 
     // spawn and join threads
     let t = std::time::Instant::now();
-    $(let $id = std::thread::spawn(move || $id::run(&$id));)+
+    $(let $id = std::thread::spawn(move || {
+      let t = std::time::Instant::now();
+      ($id::run(&$id), t.elapsed())
+    });)+
     $(let $id = $id.join();)+
-    println!("{:?}", t.elapsed());
+    let t = t.elapsed();
 
     // check solutions
     $(match $id {
-      Ok($sol) | Err(_) => {},
-      Ok(res) => println!(
+      Err(_) => {}
+      Ok(($sol, t)) => println!(
+        concat!(stringify!($id), "{: >9}μs"),
+        t.as_micros()
+      ),
+      Ok((res, _)) => println!(
         concat!(stringify!($id), " returned {:?}, expected ", stringify!($sol)),
         res
       )
     })+
+    println!("all{: >11}μs", t.as_micros());
   }
 });

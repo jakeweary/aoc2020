@@ -20,9 +20,10 @@ fn part2(joltages: &[usize]) -> usize {
     match hi - lo {
       1 => ones += 1,
       3 => {
+        // uhh.. tribonacci numbers?
         ways *= [1, 1, 2, 4, 7][ones];
         ones = 0;
-      },
+      }
       _ => panic!()
     }
   }

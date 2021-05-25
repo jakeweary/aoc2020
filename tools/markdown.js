@@ -32,7 +32,7 @@ const mdNodes = (nodes, ul = 0) =>
   [...nodes].map(n => mdNode(n, ul)).join('')
 
 const md = mdNodes($$('article'))
-  .replace(/\*\*`(.+?)`\*\*/g, '`$1`')
+  .replace(/\*\*(`.+?`)\*\*/g, '$1')
   .trim()
 
 copy(md)

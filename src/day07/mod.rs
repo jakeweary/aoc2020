@@ -1,6 +1,4 @@
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
 
 type Parsed<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;
 
@@ -17,7 +15,7 @@ fn parse(input: &str) -> Option<Parsed> {
   }).collect()
 }
 
-fn part1(parsed: &mut Parsed, bag: &str) -> usize {
+fn part1(bag: &str, parsed: &mut Parsed) -> usize {
   let mut count = 0;
   let mut stack = vec![bag];
   while let Some(bag) = stack.pop() {
@@ -33,7 +31,7 @@ fn part1(parsed: &mut Parsed, bag: &str) -> usize {
   count
 }
 
-fn part2(parsed: &Parsed, bag: &str) -> usize {
+fn part2(bag: &str, parsed: &Parsed) -> usize {
   let mut count = 0;
   let mut stack = vec![(bag, 1)];
   while let Some((bag, qty1)) = stack.pop() {
@@ -45,13 +43,10 @@ fn part2(parsed: &Parsed, bag: &str) -> usize {
   count - 1
 }
 
-pub fn run(mut file: File) -> (usize, usize) {
-  let mut input = String::new();
-  file.read_to_string(&mut input).unwrap();
-
+pub fn run(input: &str) -> (usize, usize) {
   let mut parsed = parse(&input).unwrap();
-  let part1 = part1(&mut parsed, "shiny gold");
-  let part2 = part2(&parsed, "shiny gold");
+  let part1 = part1("shiny gold", &mut parsed);
+  let part2 = part2("shiny gold", &parsed);
 
   (part1, part2)
 }

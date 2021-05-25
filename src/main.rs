@@ -1,6 +1,7 @@
-#[macro_use]
-mod aoc;
-mod utils;
+#![feature(array_windows)]
+
+#[macro_use] mod aoc;
+#[macro_use] mod utils;
 
 advent_of_code!(
   day01 -> (319531, 244300320)
@@ -10,4 +11,7 @@ advent_of_code!(
   day05 -> (838, 714)
   day06 -> (6809, 3394)
   day07 -> (151, 41559)
+  day08 -> (1832, 662)
+  day09 -> (257342611, 35602097)
+  day10 -> (2244, 3947645370368)
 );

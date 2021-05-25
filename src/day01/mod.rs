@@ -1,24 +1,20 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::str::FromStr;
 
-#[macro_use]
-mod macros;
-
-pub fn run(input: File) -> (usize, usize) {
-  let input = BufReader::new(input);
+pub fn run(input: &str) -> (usize, usize) {
   let nums = input.lines()
-    .map(|n| n.unwrap().parse().unwrap())
-    .collect::<Vec<usize>>();
+    .map(FromStr::from_str)
+    .collect::<Result<Vec<usize>, _>>()
+    .unwrap();
 
   let part1 = combinations!(nums a b)
     .find(|&(a, b)| a + b == 2020)
     .map(|(a, b)| a * b)
-    .expect("how come?");
+    .unwrap();
 
   let part2 = combinations!(nums a b c)
     .find(|&(a, b, c)| a + b + c == 2020)
     .map(|(a, b, c)| a * b * c)
-    .expect("that doesn't add up");
+    .unwrap();
 
   (part1, part2)
 }

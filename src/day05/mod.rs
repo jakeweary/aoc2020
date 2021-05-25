@@ -1,32 +1,26 @@
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-
-fn seat_id(input: &str) -> usize {
-  input.chars()
-    .map(|c| match c {
-      'F' | 'L' => 0,
-      'B' | 'R' => 1,
-      _ => panic!("unexpected 5d chess")
+fn parse_seat_id(input: &str) -> Option<usize> {
+  input.bytes()
+    .map(|b| match b {
+      b'F' | b'L' => Some(0),
+      b'B' | b'R' => Some(1),
+      _ => None
     })
-    .fold(0, |n, bit| n << 1 | bit)
+    .try_fold(0, |n, bit| Some(n << 1 | bit?))
 }
 
-pub fn run(input: File) -> (usize, usize) {
-  let input = BufReader::new(input);
-  let lines = input.lines().map(Result::unwrap);
-
-  let mut ids = lines
-    .map(|line| seat_id(&line))
-    .collect::<Vec<_>>();
+pub fn run(input: &str) -> (usize, usize) {
+  let mut ids = input.lines()
+    .map(parse_seat_id)
+    .collect::<Option<Vec<_>>>()
+    .unwrap();
 
   ids.sort_unstable();
 
-  let neighbors = ids.iter().zip(&ids[1..])
-    .find(|&(a, b)| b - a == 2)
-    .expect("somebody took my seat");
-
   let part1 = *ids.last().unwrap();
-  let part2 = neighbors.0 + 1;
+  let part2 = ids.array_windows()
+    .find(|[a, b]| b - a == 2)
+    .map(|[a, _]| a + 1)
+    .unwrap();
 
   (part1, part2)
 }

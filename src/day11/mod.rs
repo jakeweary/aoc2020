@@ -25,22 +25,20 @@ fn part1(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
 }
 
 fn part2(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
-  let visible_seats = || {
-    DIRECTIONS.iter().filter_map(|&dir| {
-      field.iter_dir(pos, dir).find(|cell| **cell != Floor)
-    })
-  };
+  let mut visible_seats = DIRECTIONS.iter().filter_map(|&dir| {
+    field.iter_dir(pos, dir).find(|cell| **cell != Floor)
+  });
 
   match cell {
     Floor => Floor,
     Empty => {
-      let comfy = visible_seats()
+      let comfy = visible_seats
         .all(|seat| *seat != Occupied);
 
       if comfy { Occupied } else { Empty }
     }
     Occupied => {
-      let too_crowded = visible_seats()
+      let too_crowded = visible_seats
         .filter(|seat| **seat == Occupied)
         .nth(4)
         .is_some();

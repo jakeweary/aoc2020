@@ -1,6 +1,6 @@
+use Mode::*;
 use Move::*;
 use Rotate::*;
-use Mode::*;
 
 pub enum Mode {
   Standard,
@@ -16,13 +16,13 @@ pub enum Move {
 
 pub enum Rotate {
   Left(i32),
-  Right(i32),
+  Right(i32)
 }
 
 pub enum Action {
   Move(Move),
   Rotate(Rotate),
-  Forward(i32),
+  Forward(i32)
 }
 
 impl From<&str> for Action {
@@ -117,4 +117,3 @@ impl Ship {
     }
   }
 }
-

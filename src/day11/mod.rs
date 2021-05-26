@@ -50,17 +50,12 @@ where
   F: FnMut(&Grid<Cell>, &Cell, (i32, i32)) -> Cell
 {
   loop {
-    let mut mutated_cells = 0;
+    let old_cells = grid.step(&mut step);
+    let no_changes = old_cells.iter()
+      .zip(&grid.cells)
+      .all(|(a, b)| a == b);
 
-    grid.step(|grid, before, pos| {
-      let after = step(grid, before, pos);
-      if *before != after {
-        mutated_cells += 1;
-      }
-      after
-    });
-
-    if mutated_cells == 0 {
+    if no_changes {
       return grid.cells.iter()
         .filter(|cell| **cell == Occupied)
         .count();

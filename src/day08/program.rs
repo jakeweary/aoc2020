@@ -1,4 +1,4 @@
-use std::mem::swap;
+use std::mem::replace;
 
 use super::op::*;
 
@@ -39,12 +39,12 @@ impl Program {
 
   pub fn fix(&mut self) -> Option<isize> {
     for cur in 0..self.ops.len() {
-      if let Some(mut flipped) = self.ops[cur].flip() {
-        swap(&mut self.ops[cur], &mut flipped);
+      if let Some(flipped) = self.ops[cur].flip() {
+        let prev = replace(&mut self.ops[cur], flipped);
         if let Ok(acc) = self.run() {
           return Some(acc);
         }
-        swap(&mut self.ops[cur], &mut flipped);
+        self.ops[cur] = prev;
       }
     }
     None

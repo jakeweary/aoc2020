@@ -1,3 +1,5 @@
+use std::mem::replace;
+
 pub const DIRECTIONS: [(i32, i32); 8] = [
   (-1, -1), ( 0, -1), ( 1, -1),
   (-1,  0),           ( 1,  0),
@@ -27,14 +29,15 @@ impl<T> Grid<T> {
     Self { cells, width, height }
   }
 
-  pub fn step<F>(&mut self, mut f: F)
+  pub fn step<F>(&mut self, mut f: F) -> Vec<T>
   where
     F: FnMut(&Self, &T, (i32, i32)) -> T
   {
     let coords = |i| (i % self.width, i / self.width);
-    self.cells = self.cells.iter().enumerate()
+    let new_cells = self.cells.iter().enumerate()
       .map(|(i, cell)| f(self, cell, coords(i as i32)))
       .collect();
+    replace(&mut self.cells, new_cells)
   }
 
   pub fn at(&self, (x, y): (i32, i32)) -> Option<&T> {

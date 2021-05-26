@@ -48,7 +48,7 @@ fn part2(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
   }
 }
 
-pub fn solve<F>(mut step: F, mut field: Field2D<Cell>) -> usize
+fn solve<F>(mut step: F, mut field: Field2D<Cell>) -> usize
 where
   F: FnMut(&Field2D<Cell>, &Cell, (i32, i32)) -> Cell
 {

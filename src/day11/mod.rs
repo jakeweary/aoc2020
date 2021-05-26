@@ -1,8 +1,8 @@
 use cell::*;
-
-use crate::utils::{DIRECTIONS, Field2D};
+use field2d::*;
 
 mod cell;
+mod field2d;
 
 fn part1(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
   match cell {

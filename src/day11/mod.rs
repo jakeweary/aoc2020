@@ -1,16 +1,16 @@
 use cell::*;
-use field2d::*;
+use grid::*;
 
 mod cell;
-mod field2d;
+mod grid;
 
-fn part1(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
+fn part1(grid: &Grid<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
   let comfy = ||
-    field.neighbors(pos)
+    grid.neighbors(pos)
       .all(|cell| *cell != Occupied);
 
   let too_crowded = ||
-    field.neighbors(pos)
+    grid.neighbors(pos)
       .filter(|cell| **cell == Occupied)
       .nth(3)
       .is_some();
@@ -22,10 +22,10 @@ fn part1(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
   }
 }
 
-fn part2(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
+fn part2(grid: &Grid<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
   let visible_seats = ||
     DIRECTIONS.iter().filter_map(|&dir| {
-      field.iter_dir(pos, dir).find(|cell| **cell != Floor)
+      grid.iter_dir(pos, dir).find(|cell| **cell != Floor)
     });
 
   let comfy = ||
@@ -45,15 +45,15 @@ fn part2(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
   }
 }
 
-fn solve<F>(mut step: F, mut field: Field2D<Cell>) -> usize
+fn solve<F>(mut step: F, mut grid: Grid<Cell>) -> usize
 where
-  F: FnMut(&Field2D<Cell>, &Cell, (i32, i32)) -> Cell
+  F: FnMut(&Grid<Cell>, &Cell, (i32, i32)) -> Cell
 {
   loop {
     let mut mutated_cells = 0;
 
-    field.step(|field, before, pos| {
-      let after = step(field, before, pos);
+    grid.step(|grid, before, pos| {
+      let after = step(grid, before, pos);
       if *before != after {
         mutated_cells += 1;
       }
@@ -61,7 +61,7 @@ where
     });
 
     if mutated_cells == 0 {
-      return field.cells.iter()
+      return grid.cells.iter()
         .filter(|cell| **cell == Occupied)
         .count();
     }
@@ -70,10 +70,10 @@ where
 
 pub fn run(input: &str) -> (usize, usize) {
   let input = input.lines().map(|s| s.bytes().map(Cell::from));
-  let field = Field2D::new(input);
+  let grid = Grid::new(input);
 
-  let part1 = solve(part1, field.clone());
-  let part2 = solve(part2, field);
+  let part1 = solve(part1, grid.clone());
+  let part2 = solve(part2, grid);
 
   (part1, part2)
 }

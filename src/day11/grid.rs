@@ -5,13 +5,13 @@ pub const DIRECTIONS: [(i32, i32); 8] = [
 ];
 
 #[derive(Clone)]
-pub struct Field2D<T> {
+pub struct Grid<T> {
   pub cells: Vec<T>,
   pub width: i32,
   pub height: i32
 }
 
-impl<T> Field2D<T> {
+impl<T> Grid<T> {
   pub fn new<I, J>(rows: I) -> Self
   where
     I: IntoIterator<Item = J>,

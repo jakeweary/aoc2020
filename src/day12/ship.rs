@@ -1,4 +1,5 @@
-use Action::*;
+use Move::*;
+use Rotate::*;
 use Mode::*;
 
 pub enum Mode {
@@ -6,14 +7,22 @@ pub enum Mode {
   Waypoint
 }
 
+pub enum Move {
+  North(i32),
+  South(i32),
+  East(i32),
+  West(i32)
+}
+
+pub enum Rotate {
+  Left(i32),
+  Right(i32),
+}
+
 pub enum Action {
-  N(i32),
-  S(i32),
-  E(i32),
-  W(i32),
-  L(i32),
-  R(i32),
-  F(i32)
+  Move(Move),
+  Rotate(Rotate),
+  Forward(i32),
 }
 
 impl From<&str> for Action {
@@ -22,13 +31,13 @@ impl From<&str> for Action {
     let action = action.bytes().next().unwrap();
     let value = value.parse().unwrap();
     match action {
-      b'N' => N(value),
-      b'S' => S(value),
-      b'E' => E(value),
-      b'W' => W(value),
-      b'L' => L(value),
-      b'R' => R(value),
-      b'F' => F(value),
+      b'N' => Self::Move(North(value)),
+      b'S' => Self::Move(South(value)),
+      b'E' => Self::Move(East(value)),
+      b'W' => Self::Move(West(value)),
+      b'L' => Self::Rotate(Left(value)),
+      b'R' => Self::Rotate(Right(value)),
+      b'F' => Self::Forward(value),
       _ => panic!()
     }
   }
@@ -79,28 +88,33 @@ impl Ship {
     I: IntoIterator<Item = &'a Action>
   {
     for action in actions {
-      match (action, mode) {
-        (N(steps), Standard) => self.pos.north += steps,
-        (S(steps), Standard) => self.pos.north -= steps,
-        (E(steps), Standard) => self.pos.east += steps,
-        (W(steps), Standard) => self.pos.east -= steps,
-
-        (N(steps), Waypoint) => self.dir.north += steps,
-        (S(steps), Waypoint) => self.dir.north -= steps,
-        (E(steps), Waypoint) => self.dir.east += steps,
-        (W(steps), Waypoint) => self.dir.east -= steps,
-
-        (L(90) | R(270), _) => self.dir.rotate_left(),
-        (L(270) | R(90), _) => self.dir.rotate_right(),
-        (L(180) | R(180), _) => self.dir.inverse(),
-
-        (F(steps), _) => {
+      match action {
+        Action::Move(m) => match mode {
+          Standard => match m {
+            North(steps) => self.pos.north += steps,
+            South(steps) => self.pos.north -= steps,
+            East(steps) => self.pos.east += steps,
+            West(steps) => self.pos.east -= steps
+          },
+          Waypoint => match m {
+            North(steps) => self.dir.north += steps,
+            South(steps) => self.dir.north -= steps,
+            East(steps) => self.dir.east += steps,
+            West(steps) => self.dir.east -= steps
+          }
+        }
+        Action::Rotate(r) => match r {
+          Left(90) | Right(270) => self.dir.rotate_left(),
+          Left(270) | Right(90) => self.dir.rotate_right(),
+          Left(180) | Right(180) => self.dir.inverse(),
+          _ => panic!()
+        }
+        Action::Forward(steps) => {
           self.pos.east += steps * self.dir.east;
           self.pos.north += steps * self.dir.north;
         }
-
-        _ => panic!()
       }
     }
   }
 }
+

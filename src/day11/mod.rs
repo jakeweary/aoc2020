@@ -5,46 +5,43 @@ mod cell;
 mod field2d;
 
 fn part1(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
-  match cell {
-    Floor => Floor,
-    Empty => {
-      let comfy = field.neighbors(pos)
-        .all(|cell| *cell != Occupied);
+  let comfy = ||
+    field.neighbors(pos)
+      .all(|cell| *cell != Occupied);
 
-      if comfy { Occupied } else { Empty }
-    }
-    Occupied => {
-      let too_crowded = field.neighbors(pos)
-        .filter(|cell| **cell == Occupied)
-        .nth(3)
-        .is_some();
+  let too_crowded = ||
+    field.neighbors(pos)
+      .filter(|cell| **cell == Occupied)
+      .nth(3)
+      .is_some();
 
-      if too_crowded { Empty } else { Occupied }
-    }
+  match *cell {
+    Empty if comfy() => Occupied,
+    Occupied if too_crowded() => Empty,
+    cell => cell
   }
 }
 
 fn part2(field: &Field2D<Cell>, cell: &Cell, pos: (i32, i32)) -> Cell {
-  let mut visible_seats = DIRECTIONS.iter().filter_map(|&dir| {
-    field.iter_dir(pos, dir).find(|cell| **cell != Floor)
-  });
+  let visible_seats = ||
+    DIRECTIONS.iter().filter_map(|&dir| {
+      field.iter_dir(pos, dir).find(|cell| **cell != Floor)
+    });
 
-  match cell {
-    Floor => Floor,
-    Empty => {
-      let comfy = visible_seats
-        .all(|seat| *seat != Occupied);
+  let comfy = ||
+    visible_seats()
+      .all(|seat| *seat != Occupied);
 
-      if comfy { Occupied } else { Empty }
-    }
-    Occupied => {
-      let too_crowded = visible_seats
-        .filter(|seat| **seat == Occupied)
-        .nth(4)
-        .is_some();
+  let too_crowded = ||
+    visible_seats()
+      .filter(|seat| **seat == Occupied)
+      .nth(4)
+      .is_some();
 
-      if too_crowded { Empty } else { Occupied }
-    }
+  match *cell {
+    Empty if comfy() => Occupied,
+    Occupied if too_crowded() => Empty,
+    cell => cell
   }
 }
 

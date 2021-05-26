@@ -1,5 +1,3 @@
-use std::mem::replace;
-
 pub const DIRECTIONS: [(i32, i32); 8] = [
   (-1, -1), ( 0, -1), ( 1, -1),
   (-1,  0),           ( 1,  0),
@@ -39,7 +37,7 @@ impl<T> Grid<T> {
     let new_cells = self.cells.iter().enumerate()
       .map(|(i, cell)| f(self, cell, coords(i as i32)))
       .collect();
-    replace(&mut self.cells, new_cells)
+    std::mem::replace(&mut self.cells, new_cells)
   }
 
   pub fn at(&self, (x, y): (i32, i32)) -> Option<&T> {

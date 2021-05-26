@@ -1,5 +1,3 @@
-use std::mem::replace;
-
 use super::op::*;
 
 pub struct Program {
@@ -41,8 +39,10 @@ impl Program {
     for cur in 0..self.ops.len() {
       let op = &mut self.ops[cur];
       if let Some(flipped) = op.flip() {
-        let backup = replace(op, flipped);
-        self.run().ok()?;
+        let backup = std::mem::replace(op, flipped);
+        if let Ok(acc) = self.run() {
+          return Some(acc);
+        }
         self.ops[cur] = backup;
       }
     }

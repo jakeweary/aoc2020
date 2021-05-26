@@ -13,12 +13,12 @@ pub struct Grid<T> {
   pub height: i32
 }
 
-impl<T> Grid<T> {
-  pub fn new<I, J>(rows: I) -> Self
-  where
-    I: IntoIterator<Item = J>,
-    J: IntoIterator<Item = T>
-  {
+impl<I, J, T> From<I> for Grid<T>
+where
+  I: IntoIterator<Item = J>,
+  J: IntoIterator<Item = T>
+{
+  fn from(rows: I) -> Self {
     let mut cells = Vec::new();
     let mut height = 0;
     for row in rows {
@@ -28,7 +28,9 @@ impl<T> Grid<T> {
     let width = cells.len() as i32 / height;
     Self { cells, width, height }
   }
+}
 
+impl<T> Grid<T> {
   pub fn step<F>(&mut self, mut f: F) -> Vec<T>
   where
     F: FnMut(&Self, &T, (i32, i32)) -> T

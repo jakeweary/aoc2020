@@ -65,7 +65,7 @@ where
 
 pub fn run(input: &str) -> (usize, usize) {
   let rows = input.lines().map(|row| row.bytes().map(Cell::from));
-  let grid = Grid::new(rows);
+  let grid = Grid::from(rows);
 
   let part1 = solve(part1, grid.clone());
   let part2 = solve(part2, grid);

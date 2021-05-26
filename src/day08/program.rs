@@ -39,12 +39,11 @@ impl Program {
 
   pub fn fix(&mut self) -> Option<isize> {
     for cur in 0..self.ops.len() {
-      if let Some(flipped) = self.ops[cur].flip() {
-        let op = replace(&mut self.ops[cur], flipped);
-        if let Ok(acc) = self.run() {
-          return Some(acc);
-        }
-        self.ops[cur] = op;
+      let op = &mut self.ops[cur];
+      if let Some(flipped) = op.flip() {
+        let backup = replace(op, flipped);
+        self.run().ok()?;
+        self.ops[cur] = backup;
       }
     }
     None

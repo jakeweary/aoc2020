@@ -83,7 +83,7 @@ impl Ship {
     self.pos.east.abs() + self.pos.north.abs()
   }
 
-  pub fn steer<'a, I>(&mut self, mode: &Mode, actions: I)
+  pub fn navigate<'a, I>(&mut self, mode: &Mode, actions: I)
   where
     I: IntoIterator<Item = &'a Action>
   {

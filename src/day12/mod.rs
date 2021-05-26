@@ -9,13 +9,13 @@ pub fn run(input: &str) -> (usize, usize) {
 
   let part1 = {
     let mut ship = Ship::new(1, 0);
-    ship.steer(&Mode::Standard, &actions);
+    ship.navigate(&Mode::Standard, &actions);
     ship.distance_traveled() as usize
   };
 
   let part2 = {
     let mut ship = Ship::new(10, 1);
-    ship.steer(&Mode::Waypoint, &actions);
+    ship.navigate(&Mode::Waypoint, &actions);
     ship.distance_traveled() as usize
   };
 

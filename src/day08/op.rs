@@ -9,10 +9,11 @@ pub enum Op {
 impl Op {
   pub fn parse(input: &str) -> Option<Self> {
     let (op, arg) = input.split_once(' ')?;
-    match (op, arg.parse().ok()) {
-      ("acc", arg) => arg.map(Acc),
-      ("jmp", arg) => arg.map(Jmp),
-      ("nop", arg) => arg.map(Nop),
+    let arg = arg.parse().ok()?;
+    match op {
+      "acc" => Some(Acc(arg)),
+      "jmp" => Some(Jmp(arg)),
+      "nop" => Some(Nop(arg)),
       _ => None
     }
   }

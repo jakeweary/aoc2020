@@ -33,9 +33,9 @@ impl<T> Grid<T> {
   where
     F: FnMut(&Self, &T, (i32, i32)) -> T
   {
-    let coords = |i| (i % self.width, i / self.width);
+    let xy = |i| (i % self.width, i / self.width);
     let new_cells = self.cells.iter().enumerate()
-      .map(|(i, cell)| f(self, cell, coords(i as i32)))
+      .map(|(i, cell)| f(self, cell, xy(i as i32)))
       .collect();
     std::mem::replace(&mut self.cells, new_cells)
   }
@@ -52,14 +52,14 @@ impl<T> Grid<T> {
   }
 
   pub fn neighbors(&self, (x, y): (i32, i32)) -> impl Iterator<Item = &T> {
-    DIRECTIONS.iter().filter_map(move |&(xʹ, yʹ)| {
-      self.at((x + xʹ, y + yʹ))
+    DIRECTIONS.iter().filter_map(move |&(dx, dy)| {
+      self.at((x + dx, y + dy))
     })
   }
 
-  pub fn iter_dir(&self, (x, y): (i32, i32), (xʹ, yʹ): (i32, i32)) -> impl Iterator<Item = &T> {
+  pub fn iter_dir(&self, (x, y): (i32, i32), (dx, dy): (i32, i32)) -> impl Iterator<Item = &T> {
     (1..).map_while(move |steps| {
-      self.at((x + steps * xʹ, y + steps * yʹ))
+      self.at((x + steps * dx, y + steps * dy))
     })
   }
 }

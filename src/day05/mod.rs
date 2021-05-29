@@ -8,19 +8,21 @@ fn parse_seat_id(input: &str) -> Option<usize> {
     .try_fold(0, |n, bit| Some(n << 1 | bit?))
 }
 
+// https://math.stackexchange.com/a/1917515
+fn sum_gauss(a: usize, b: usize) -> usize {
+  (a + b) * (b - a + 1) / 2
+}
+
 pub fn run(input: &str) -> (usize, usize) {
-  let mut ids = input.lines()
+  let (min, max, sum) = input.lines()
     .map(parse_seat_id)
-    .collect::<Option<Vec<_>>>()
+    .try_fold((usize::MAX, 0, 0), |(min, max, sum), id| {
+      id.map(|id| (min.min(id), max.max(id), sum + id))
+    })
     .unwrap();
 
-  ids.sort_unstable();
-
-  let part1 = *ids.last().unwrap();
-  let part2 = ids.array_windows()
-    .find(|[a, b]| b - a == 2)
-    .map(|[a, _]| a + 1)
-    .unwrap();
+  let part1 = max;
+  let part2 = sum_gauss(min, max) - sum;
 
   (part1, part2)
 }

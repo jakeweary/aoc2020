@@ -1,3 +1,6 @@
+// ended up using `String::split`
+#![allow(dead_code)]
+
 use std::io::{BufRead, BufReader, Read};
 
 pub fn line_groups<R: Read>(r: R) -> impl Iterator<Item = String> {

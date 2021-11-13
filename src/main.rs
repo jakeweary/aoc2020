@@ -1,4 +1,3 @@
-#![feature(iter_map_while)]
 #![feature(array_windows)]
 #![allow(uncommon_codepoints)]
 
@@ -18,4 +17,5 @@ advent_of_code!(
   day10 -> (2244, 3947645370368)
   day11 -> (2093, 1862)
   day12 -> (879, 18107)
+  day13 -> (3385, 600689120448303)
 );

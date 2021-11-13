@@ -4,24 +4,24 @@ pub fn run(input: &str) -> (usize, usize) {
   let buses = lines.next().unwrap();
 
   let buses = buses.split(',').enumerate()
-    .filter_map(|(i, id)| Some((i as isize, id.parse::<isize>().ok()?)))
+    .filter_map(|(i, id)| Some((i as isize, id.parse().ok()?)))
     .collect::<Vec<_>>();
 
   let part1 = buses.iter()
     .map(|(_, bus)| (bus, bus - depart_time % bus))
     .reduce(|a, b| if a.1 < b.1 { a } else { b })
     .map(|(bus, arrives_in)| bus * arrives_in)
-    .unwrap();
+    .unwrap() as usize;
 
   let part2 = {
     let (rs, ms) = buses.into_iter()
       .map(|(i, id)| (id - i, id))
       .unzip::<_, _, Vec<_>, Vec<_>>();
 
-    crt(&rs, &ms).unwrap()
+    crt(&rs, &ms).unwrap() as usize
   };
 
-  (part1 as usize, part2 as usize)
+  (part1, part2)
 }
 
 /// greatest common divisor (extended euclidean algorithm)

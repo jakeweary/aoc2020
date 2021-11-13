@@ -11,7 +11,7 @@ pub fn run(input: &str) -> (usize, usize) {
   let part2 = [(1, 1), (5, 1), (7, 1), (1, 2)]
     .into_iter()
     .map(|(x, y)| count_trees(input, x, y))
-    .product();
+    .fold(part1, |acc, n| acc * n);
 
   (part1, part2)
 }

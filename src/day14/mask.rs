@@ -5,21 +5,16 @@ pub struct Mask {
 }
 
 impl Mask {
-  pub fn update(&mut self, input: &str) {
-    self.mask = input.bytes()
-      .map(|c| match c { b'X' => 1, _ => 0 })
-      .fold(0, |acc, bit| acc << 1 | bit);
-
-    self.bits = input.bytes()
-      .map(|c| match c { b'1' => 1, _ => 0 })
-      .fold(0, |acc, bit| acc << 1 | bit);
+  pub fn update(&mut self, mask: usize, bits: usize) {
+    self.mask = mask;
+    self.bits = bits;
   }
 
-  pub fn apply(&self, value: usize) -> usize {
+  pub fn apply_to(&self, value: usize) -> usize {
     self.bits | self.mask & value
   }
 
-  pub fn floating(&self, value: usize, mut f: impl FnMut(usize)) {
+  pub fn for_all_floating(&self, value: usize, mut f: impl FnMut(usize)) {
     fn rec(f: &mut impl FnMut(usize), i: usize, n: usize) {
       match (i..36).find(|i| n >> i & 1 == 1) {
         Some(i) => {

@@ -1,49 +1,33 @@
 use std::collections::HashMap;
 
+use self::mask::*;
+use self::op::*;
+
 mod mask;
+mod op;
 
 pub fn run(input: &str) -> (usize, usize) {
-  let part1 = part1(input).unwrap();
-  let part2 = part2(input).unwrap();
-  (part1, part2)
-}
+  let mut current_mask = Mask::default();
+  let mut memory_part1 = HashMap::new();
+  let mut memory_part2 = HashMap::new();
 
-fn part1(input: &str) -> Option<usize> {
-  let mut memory = vec![0; 1<<16];
-  let mut mask = mask::Mask::default();
-
-  for line in input.lines() {
-    match line.split_once(" = ")? {
-      ("mask", rhs) => mask.update(rhs),
-      (lhs, rhs) => {
-        let not_digit = |c: char| !c.is_ascii_digit();
-        let addr = lhs.trim_matches(not_digit).parse::<usize>().ok()?;
-        let value = rhs.parse().ok()?;
-        memory[addr] = mask.apply(value);
+  for op in input.lines().filter_map(Op::parse) {
+    match op {
+      Op::Mask { mask, bits } => {
+        current_mask.update(mask, bits);
       }
-    }
-  }
-
-  Some(memory.iter().sum())
-}
-
-fn part2(input: &str) -> Option<usize> {
-  let mut memory = HashMap::new();
-  let mut mask = mask::Mask::default();
-
-  for line in input.lines() {
-    match line.split_once(" = ")? {
-      ("mask", rhs) => mask.update(rhs),
-      (lhs, rhs) => {
-        let not_digit = |c: char| !c.is_ascii_digit();
-        let addr = lhs.trim_matches(not_digit).parse::<usize>().ok()?;
-        let value = rhs.parse().ok()?;
-        mask.floating(addr, |addr| {
-          memory.insert(addr, value);
+      Op::Write { addr, value } => {
+        memory_part1.insert(addr, {
+          current_mask.apply_to(value)
+        });
+        current_mask.for_all_floating(addr, |addr| {
+          memory_part2.insert(addr, value);
         });
       }
     }
   }
 
-  Some(memory.values().sum())
+  let part1 = memory_part1.values().sum();
+  let part2 = memory_part2.values().sum();
+  (part1, part2)
 }

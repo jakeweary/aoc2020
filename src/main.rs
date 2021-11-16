@@ -1,5 +1,5 @@
 #![feature(array_windows)]
-#![allow(uncommon_codepoints)]
+#![deny(rust_2018_idioms)]
 
 #[macro_use] mod aoc;
 #[macro_use] mod utils;
@@ -20,4 +20,5 @@ advent_of_code!(
   day13 -> (3385, 600689120448303)
   day14 -> (9967721333886, 4355897790573)
   day15 -> (870, 9136)
+  day16 -> (27802, 0)
 );

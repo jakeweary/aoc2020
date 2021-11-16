@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 type Parsed<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;
 
-fn parse(input: &str) -> Option<Parsed> {
+fn parse(input: &str) -> Option<Parsed<'_>> {
   input.lines().map(|line| {
     let mut hi = line.match_indices(" bag");
     let lo = line.match_indices(|c| matches!(c, '0'..='9'));
@@ -15,7 +15,7 @@ fn parse(input: &str) -> Option<Parsed> {
   }).collect()
 }
 
-fn part1(bag: &str, parsed: &mut Parsed) -> usize {
+fn part1(bag: &str, parsed: &mut Parsed<'_>) -> usize {
   let mut count = 0;
   let mut stack = vec![bag];
   while let Some(bag) = stack.pop() {
@@ -31,7 +31,7 @@ fn part1(bag: &str, parsed: &mut Parsed) -> usize {
   count
 }
 
-fn part2(bag: &str, parsed: &Parsed) -> usize {
+fn part2(bag: &str, parsed: &Parsed<'_>) -> usize {
   let mut count = 0;
   let mut stack = vec![(bag, 1)];
   while let Some((bag, qty1)) = stack.pop() {

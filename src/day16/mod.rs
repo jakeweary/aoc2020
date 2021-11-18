@@ -33,7 +33,7 @@ fn parse(input: &str) -> Option<(Vec<Rule<'_>>, Ticket, Vec<Ticket>)> {
 }
 
 fn rule_to_field_map(rules: &[Rule<'_>], tickets: Vec<Ticket>) -> [usize; FIELDS] {
-  let fields = transpose(tickets).unwrap();
+  let fields = transpose(tickets);
 
   let mut nth_field_matches_n_rules = [0; FIELDS];
   let mut nth_rule_matches_n_fields = [0; FIELDS];
@@ -58,7 +58,7 @@ fn rule_to_field_map(rules: &[Rule<'_>], tickets: Vec<Ticket>) -> [usize; FIELDS
   map
 }
 
-fn transpose<T, M, V>(matrix: M) -> Option<Vec<Vec<T>>>
+fn transpose<T, M, V>(matrix: M) -> impl Iterator<Item = Vec<T>>
 where
   M: IntoIterator<Item = V>,
   V: IntoIterator<Item = T>
@@ -67,7 +67,7 @@ where
     .map(IntoIterator::into_iter)
     .collect::<Vec<_>>();
 
-  (0..iters.first()?.size_hint().0)
-    .map(|_| iters.iter_mut().map(Iterator::next).collect())
-    .collect()
+  std::iter::from_fn(move || {
+    iters.iter_mut().map(Iterator::next).collect()
+  })
 }

@@ -6,7 +6,7 @@ use self::op::*;
 mod mask;
 mod op;
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u64, u64) {
   let mut current_mask = Mask::default();
   let mut memory_part1 = HashMap::new();
   let mut memory_part2 = HashMap::new();

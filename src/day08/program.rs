@@ -12,7 +12,7 @@ impl Program {
       .map(|ops| Self { ops })
   }
 
-  pub fn run(&self) -> Result<isize, isize> {
+  pub fn run(&self) -> Result<i32, i32> {
     let mut visited = vec![false; self.ops.len()];
     let mut cur = 0;
     let mut acc = 0;
@@ -35,7 +35,7 @@ impl Program {
     Ok(acc)
   }
 
-  pub fn fix(&mut self) -> Option<isize> {
+  pub fn fix(&mut self) -> Option<i32> {
     for cur in 0..self.ops.len() {
       let op = &mut self.ops[cur];
       if let Some(flipped) = op.flip() {

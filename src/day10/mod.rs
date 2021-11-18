@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-fn part1(joltages: &[usize]) -> usize {
+fn part1(joltages: &[u64]) -> u64 {
   let mut diff1 = 0;
   let mut diff3 = 0;
   for [lo, hi] in joltages.array_windows() {
@@ -13,7 +13,7 @@ fn part1(joltages: &[usize]) -> usize {
   diff1 * diff3
 }
 
-fn part2(joltages: &[usize]) -> usize {
+fn part2(joltages: &[u64]) -> u64 {
   let mut ways = 1;
   let mut ones = 0;
   for [lo, hi] in joltages.array_windows() {
@@ -30,7 +30,7 @@ fn part2(joltages: &[usize]) -> usize {
   ways
 }
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u64, u64) {
   let mut joltages = input.lines()
     .map(FromStr::from_str)
     .collect::<Result<Vec<_>, _>>()

@@ -1,4 +1,4 @@
-fn parse_seat_id(input: &str) -> Option<usize> {
+fn parse_seat_id(input: &str) -> Option<u32> {
   input.bytes()
     .map(|b| match b {
       b'F' | b'L' => Some(0),
@@ -9,14 +9,14 @@ fn parse_seat_id(input: &str) -> Option<usize> {
 }
 
 // https://math.stackexchange.com/a/1917515
-fn sum_gauss(a: usize, b: usize) -> usize {
+fn sum_gauss(a: u32, b: u32) -> u32 {
   (a + b) * (b - a + 1) / 2
 }
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u32, u32) {
   let (min, max, sum) = input.lines()
     .map(parse_seat_id)
-    .try_fold((usize::MAX, 0, 0), |(min, max, sum), id| {
+    .try_fold((u32::MAX, 0, 0), |(min, max, sum), id| {
       id.map(|id| (min.min(id), max.max(id), sum + id))
     })
     .unwrap();

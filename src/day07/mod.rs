@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-type Parsed<'a> = HashMap<&'a str, Vec<(&'a str, usize)>>;
+type Parsed<'a> = HashMap<&'a str, Vec<(&'a str, u32)>>;
 
 fn parse(input: &str) -> Option<Parsed<'_>> {
   input.lines().map(|line| {
@@ -15,7 +15,7 @@ fn parse(input: &str) -> Option<Parsed<'_>> {
   }).collect()
 }
 
-fn part1(bag: &str, parsed: &mut Parsed<'_>) -> usize {
+fn part1(bag: &str, parsed: &mut Parsed<'_>) -> u32 {
   let mut count = 0;
   let mut stack = vec![bag];
   while let Some(bag) = stack.pop() {
@@ -31,7 +31,7 @@ fn part1(bag: &str, parsed: &mut Parsed<'_>) -> usize {
   count
 }
 
-fn part2(bag: &str, parsed: &Parsed<'_>) -> usize {
+fn part2(bag: &str, parsed: &Parsed<'_>) -> u32 {
   let mut count = 0;
   let mut stack = vec![(bag, 1)];
   while let Some((bag, qty1)) = stack.pop() {
@@ -43,7 +43,7 @@ fn part2(bag: &str, parsed: &Parsed<'_>) -> usize {
   count - 1
 }
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u32, u32) {
   let mut parsed = parse(&input).unwrap();
   let part1 = part1("shiny gold", &mut parsed);
   let part2 = part2("shiny gold", &parsed);

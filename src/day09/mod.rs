@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-fn part1(nums: &[usize]) -> Option<usize> {
+fn part1(nums: &[u64]) -> Option<u64> {
   nums.iter().skip(25).enumerate().find_map(|(i, &n)| {
     let prev25 = &nums[i..][..25];
     combinations!(prev25 a b)
@@ -9,7 +9,7 @@ fn part1(nums: &[usize]) -> Option<usize> {
   })
 }
 
-fn part2(nums: &[usize], target: usize) -> Option<usize> {
+fn part2(nums: &[u64], target: u64) -> Option<u64> {
   for i in 0..nums.len() {
     let mut acc = 0;
     let nums = &nums[i..];
@@ -29,7 +29,7 @@ fn part2(nums: &[usize], target: usize) -> Option<usize> {
   None
 }
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u64, u64) {
   let nums = input.lines()
     .map(FromStr::from_str)
     .collect::<Result<Vec<_>, _>>()

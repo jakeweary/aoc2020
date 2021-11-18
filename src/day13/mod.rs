@@ -1,4 +1,4 @@
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (i64, i64) {
   let mut lines = input.lines();
   let depart_time = lines.next().unwrap().parse::<i64>().unwrap();
   let buses = lines.next().unwrap();
@@ -13,9 +13,9 @@ pub fn run(input: &str) -> (usize, usize) {
     .map(|(_, bus)| (bus - depart_time % bus, bus))
     .reduce(|a, b| if a.0 < b.0 { a } else { b })
     .map(|(arrives_in, bus)| arrives_in * bus)
-    .unwrap() as usize;
+    .unwrap();
 
-  let part2 = crt(&buses).unwrap() as usize;
+  let part2 = crt(&buses).unwrap();
 
   (part1, part2)
 }

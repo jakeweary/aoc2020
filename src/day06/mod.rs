@@ -1,4 +1,4 @@
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u32, u32) {
   let mut part1 = 0;
   let mut part2 = 0;
 
@@ -16,8 +16,8 @@ pub fn run(input: &str) -> (usize, usize) {
       all &= answers;
     }
 
-    part1 += any.count_ones() as usize;
-    part2 += all.count_ones() as usize;
+    part1 += any.count_ones();
+    part2 += all.count_ones();
   }
 
   (part1, part2)

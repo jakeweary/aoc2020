@@ -2,7 +2,7 @@ use passport::Passport;
 
 mod passport;
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u32, u32) {
   let mut part1 = 0;
   let mut part2 = 0;
 

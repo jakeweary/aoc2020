@@ -1,6 +1,6 @@
 pub enum Op {
-  Mask { mask: usize, bits: usize },
-  Write { addr: usize, value: usize }
+  Mask { mask: u64, bits: u64 },
+  Write { addr: u64, value: u64 }
 }
 
 impl Op {

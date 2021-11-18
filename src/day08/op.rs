@@ -1,9 +1,9 @@
 pub use Op::*;
 
 pub enum Op {
-  Acc(isize),
-  Jmp(isize),
-  Nop(isize)
+  Acc(i32),
+  Jmp(i32),
+  Nop(i32)
 }
 
 impl Op {

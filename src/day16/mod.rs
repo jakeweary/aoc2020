@@ -4,7 +4,7 @@ use self::ticket::*;
 mod rule;
 mod ticket;
 
-pub fn run(input: &str) -> (usize, usize) {
+pub fn run(input: &str) -> (u32, u64) {
   let (rules, mine, others) = parse(input).unwrap();
 
   let (invalid, valid) = others.into_iter()
@@ -14,12 +14,12 @@ pub fn run(input: &str) -> (usize, usize) {
 
   let part1 = invalid.iter()
     .flat_map(|t| t.invalid_values(&rules))
-    .sum::<u32>() as usize;
+    .sum();
 
   let part2 = rules.into_iter().enumerate()
     .filter(|(_, rule)| rule.name().starts_with("departure"))
-    .map(|(rule, _)| mine.field(rule_to_field_map[rule]) as usize)
-    .product::<usize>();
+    .map(|(rule, _)| mine.field(rule_to_field_map[rule]) as u64)
+    .product();
 
   (part1, part2)
 }

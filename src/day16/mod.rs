@@ -26,14 +26,16 @@ pub fn run(input: &str) -> (usize, usize) {
 
 fn parse(input: &str) -> Option<(Vec<Rule<'_>>, Ticket, Vec<Ticket>)> {
   let mut blocks = input.split("\n\n").map(str::lines);
+
   let rules = blocks.next()?.map(Rule::parse).collect::<Option<_>>()?;
   let mine = blocks.next()?.nth(1).and_then(Ticket::parse)?;
   let others = blocks.next()?.skip(1).map(Ticket::parse).collect::<Option<_>>()?;
+
   Some((rules, mine, others))
 }
 
 fn rule_to_field_map(rules: &[Rule<'_>], tickets: Vec<Ticket>) -> [usize; FIELDS] {
-  let fields = transpose(tickets);
+  let fields = transpose::<_, _, _, Vec<_>>(tickets);
 
   let mut nth_field_matches_n_rules = [0; FIELDS];
   let mut nth_rule_matches_n_fields = [0; FIELDS];
@@ -58,10 +60,11 @@ fn rule_to_field_map(rules: &[Rule<'_>], tickets: Vec<Ticket>) -> [usize; FIELDS
   map
 }
 
-fn transpose<T, M, V>(matrix: M) -> impl Iterator<Item = Vec<T>>
+fn transpose<T, V, M, I>(matrix: M) -> impl Iterator<Item = I>
 where
+  V: IntoIterator<Item = T>,
   M: IntoIterator<Item = V>,
-  V: IntoIterator<Item = T>
+  I: FromIterator<T>
 {
   let mut iters = matrix.into_iter()
     .map(IntoIterator::into_iter)

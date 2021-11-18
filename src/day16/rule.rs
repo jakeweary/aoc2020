@@ -18,7 +18,11 @@ impl<'a> Rule<'a> {
     Some(Self { name, ranges })
   }
 
-  pub fn check(&self, value: u32) -> bool {
+  pub fn name(&self) -> &str {
+    self.name
+  }
+
+  pub fn matches(&self, value: u32) -> bool {
     self.ranges.iter().any(|r| r.contains(&value))
   }
 }
